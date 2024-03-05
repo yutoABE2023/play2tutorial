@@ -7,6 +7,8 @@ import scalikejdbc._
 
 
 class UsersSpec extends FixtureAnyFlatSpec with Matchers with AutoRollback {
+  // 初期化処理を追加
+  config.DBs.setup()
   val u = Users.syntax("u")
 
   behavior of "Users"
@@ -41,10 +43,10 @@ class UsersSpec extends FixtureAnyFlatSpec with Matchers with AutoRollback {
   }
   it should "save a record" in { implicit session =>
     val entity = Users.findAll().head
-    // TODO modify something
-    val modified = entity
+    // nameを変更
+    val modified = entity.copy(name = "modify")
     val updated = Users.save(modified)
-    updated should not equal(entity)
+    updated should not equal (entity)
   }
   it should "destroy a record" in { implicit session =>
     val entity = Users.findAll().head
